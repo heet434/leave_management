@@ -1,0 +1,6 @@
+express
+cors
+mysql
+path
+
+# Also, set up the database in XAMPP, and create a database leave_management with the required tables.
