@@ -1,8 +1,7 @@
 # Leave Management System
 
-
-## Introduction
-This is a leave management system web application that allows students, instructors, and admins to manage leaves, leave applications and attendance. The system is built using Node.js and Express.js for the server side, and React with Typescript on the frontend.
+This is a leave management system web application that allows students, instructors, and admins to manage leaves, leave applications and attendance. The system is built using Node.js and Express.js for the server side, and React with Typescript on the frontend.<br/>
+This is the website for the report of the project: [report](https://lm-report.my.canva.site/)
 
 ## Frontend
 
