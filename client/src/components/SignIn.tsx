@@ -25,6 +25,10 @@ import SignUp from './SignUp';
 import axios from 'axios';
 //const navigate = useNavigate();
 
+// get BACKEND_PORT from .env file
+require('dotenv').config();
+const BACKEND_PORT = process.env.REACT_APP_BACKEND_PORT;
+
 function Copyright(props: any) {
   return (
     <Typography variant="body2" color="text.secondary" align="center" {...props}>
@@ -46,7 +50,7 @@ async function authenticateUser(userDetail: any): Promise<boolean> {
             role: userDetail.role
         };
 
-        const response = await axios.post('http://localhost:5001/userVerify', toSend);
+        const response = await axios.post(`${BACKEND_PORT}/userVerify`, toSend);
 
         // Assuming the response includes some authentication information
         // You might need to adjust this based on the response structure

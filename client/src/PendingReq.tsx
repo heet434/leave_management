@@ -3,6 +3,10 @@ import { Paper, Typography, Button, Grid } from '@mui/material';
 import axios from 'axios';
 import dayjs from 'dayjs';
 
+// getting backend port from .env file
+require('dotenv').config();
+const BACKEND_PORT = process.env.REACT_APP_BACKEND_PORT;
+
 interface PendingReqProps {
   instructorData: {
     courseData: {
@@ -20,7 +24,7 @@ const PendingReq: React.FC<PendingReqProps> = ({ instructorData }) => {
 
     for (let i = 0; i < instructorData.courseData.length; i++) {
       const course_code = instructorData.courseData[i].course_code;
-      const response = await axios.get(`http://localhost:5001/getLeaves`, { params: { course_code } });
+      const response = await axios.get(`${BACKEND_PORT}/getLeaves`, { params: { course_code } });
 
       const pendingLeaves = response.data.leaveData.filter((leave: any) => leave.status === 'pending');
       pendingLeavesInCourses1.push(pendingLeaves);
@@ -36,7 +40,7 @@ const PendingReq: React.FC<PendingReqProps> = ({ instructorData }) => {
 
   const rejectLeave = async (leave_id : number) => {
     try {
-      await axios.post('http://localhost:5001/rejectLeave', {
+      await axios.post(`${BACKEND_PORT}/rejectLeave`, {
         leave_id
       });
 
@@ -49,7 +53,7 @@ const PendingReq: React.FC<PendingReqProps> = ({ instructorData }) => {
 
   const approveLeave = async (leave_id: number) => {
     try {
-      await axios.post('http://localhost:5001/approveLeave', {
+      await axios.post(`${BACKEND_PORT}/approveLeave`, {
         leave_id
       });
 

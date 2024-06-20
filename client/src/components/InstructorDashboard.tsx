@@ -30,6 +30,10 @@ import AddTaskIcon from '@mui/icons-material/AddTask';
 import LogoutIcon from '@mui/icons-material/Logout';
 import AddCardIcon from '@mui/icons-material/AddCard';
 
+// add backend port from .env file
+require('dotenv').config();
+const BACKEND_PORT = process.env.REACT_APP_BACKEND_PORT;
+
 function Copyright(props: any) {
   return (
     <Typography variant="body2" color="text.secondary" align="center" {...props}>
@@ -193,7 +197,7 @@ export default function Instructor({userLoginUtility}: {userLoginUtility: any}) 
     const fetchData = async () => {
       try {
         const user_id = UserProfile.getUserName();
-        const response = await axios.get(`http://localhost:5001/instructorData`, { params: { user_id } });
+        const response = await axios.get(`${BACKEND_PORT}/instructorData`, { params: { user_id } });
         setInstructorData(response.data);
         //console.log(response.data)
       } catch (error) {

@@ -17,6 +17,10 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import axios from 'axios';
 import { Navigate, useNavigate } from 'react-router-dom';
 
+// get BACKEND_PORT from .env file
+require('dotenv').config();
+const BACKEND_PORT = process.env.REACT_APP_BACKEND_PORT;
+
 function Copyright(props: any) {
   return (
     <Typography variant="body2" color="white" align="center" {...props}>
@@ -54,7 +58,7 @@ export default function SignUp() {
     event.preventDefault();
     
     //console.log(formData, role); 
-    axios.post('http://localhost:5001/addUser', {
+    axios.post(`${BACKEND_PORT}/addUser`, {
         ...formData,
         role,
         })

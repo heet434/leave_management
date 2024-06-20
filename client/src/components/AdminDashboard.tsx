@@ -28,6 +28,10 @@ import AddTaskIcon from '@mui/icons-material/AddTask';
 import AddCardIcon from '@mui/icons-material/AddCard';
 import LogoutIcon from '@mui/icons-material/Logout';
 
+// get BACKEND_PORT from .env file
+require('dotenv').config();
+const BACKEND_PORT = process.env.REACT_APP_BACKEND_PORT;
+
 const drawerWidth = 200;
 
 interface AppBarProps {
@@ -93,7 +97,7 @@ const AdminDashboard = ({userLoginUtility}: {userLoginUtility: any}) => {
 
   const handleAddCourse = async () => {
     try {
-      const response = await axios.post('http://localhost:5001/addCourse', {
+      const response = await axios.post(`${BACKEND_PORT}/addCourse`, {
         courseCode,
         courseTitle,
         instructorId
@@ -106,7 +110,7 @@ const AdminDashboard = ({userLoginUtility}: {userLoginUtility: any}) => {
 
   const handleAddStudentToCourse = async () => {
     try {
-      const response = await axios.post('http://localhost:5001/addStudentToCourse', {
+      const response = await axios.post(`${BACKEND_PORT}/addStudentToCourse`, {
         courseCode: selectedCourse,
         studentName,
         studentId

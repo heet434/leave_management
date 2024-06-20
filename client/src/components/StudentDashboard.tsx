@@ -28,6 +28,10 @@ import EventNoteIcon from '@mui/icons-material/EventNote';
 import BookIcon from '@mui/icons-material/Book';
 import ViewCourses from './ViewCoursesStudent';
 
+// get BACKEND_PORT from .env file
+require('dotenv').config();
+const BACKEND_PORT = process.env.REACT_APP_BACKEND_PORT;
+
 function Copyright(props: any) {
   return (
     <Typography variant="body2" color="white" align="center" {...props}>
@@ -191,7 +195,7 @@ export default function Student({userLoginUtility}: {userLoginUtility: any}) {
     const fetchData = async () => {
       try {
         const user_id = UserProfile.getUserName();
-        const response = await axios.get(`http://localhost:5001/studentData`, { params: { user_id } });
+        const response = await axios.get(`${BACKEND_PORT}/studentData`, { params: { user_id } });
         setStudentData(response.data);
       } catch (error) {
         console.error('Cannot get Student Data', error);

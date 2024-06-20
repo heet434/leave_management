@@ -2,6 +2,10 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 //import CalendarComponent from './Calendar';
 
+// get BACKEND_PORT from .env file
+require('dotenv').config();
+const BACKEND_PORT = process.env.REACT_APP_BACKEND_PORT;
+
 interface Leave {
     leave_date: string;
     user_id: number;
@@ -32,7 +36,7 @@ const AddLeave: React.FC<Leave> = ({ leave_date, user_id, user_role, dataChange,
     useEffect(() => {
         const getEnrollmentDetails = async () => {
             try {
-                const response = (await axios.get(`http://localhost:5001/studentData`, { params: { user_id } }))
+                const response = (await axios.get(`${BACKEND_PORT}/studentData`, { params: { user_id } }))
                 //console.log(response)
                 setUserEnrollment(response.data.enrollmentData)
 
@@ -54,7 +58,7 @@ const AddLeave: React.FC<Leave> = ({ leave_date, user_id, user_role, dataChange,
                 user_role
             };
             //console.log(dataToSend)
-            const response = await axios.post('http://localhost:5001/addLeave', dataToSend);
+            const response = await axios.post(`${BACKEND_PORT}/addLeave`, dataToSend);
 
             if (response.status === 200) {
                 console.log('Leave added successfully');
