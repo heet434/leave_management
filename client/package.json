@@ -35,8 +35,8 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
+    "start": "react-dotenv && react-scripts start",
+    "build": "react-dotenv && react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
@@ -61,5 +61,8 @@
   "devDependencies": {
     "@types/jest": "^29.5.12",
     "@types/react-scroll": "^1.8.10"
+  },
+  "react-dotenv": {
+    "whitelist": ["REACT_APP_BACKEND_PORT"]
   }
 }
