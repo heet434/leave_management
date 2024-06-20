@@ -1,4 +1,5 @@
 {
+  "homepage": "https://heet434.github.io/leave_management/tree/deploy/client",
   "name": "client",
   "version": "0.1.0",
   "proxy": "https://leavemanagement-production.up.railway.app/",
@@ -35,6 +36,8 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build",
     "start": "react-dotenv && react-scripts start",
     "build": "react-dotenv && react-scripts build",
     "test": "react-scripts test",
