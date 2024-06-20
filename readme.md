@@ -28,8 +28,6 @@ I used React with Typescript for building a robust frontend for the application.
 ### The Relational Schema for the backend is as follows: <br/>
 <img width="828" alt="erd" src="https://github.com/heet434/leave_management/assets/118350153/d97175c0-0357-4ec9-934b-9e39b108a223">
 
-
-
 The server side code is built using Node.js and Express.js. The server side uses a mySQL database for the backend framework. The database of the project is built on mySQL on XAMPP server. The relevant exported database can be found in the sql file. The backend for this project was quite simple, so I created it in a single server file and initially created all the db tables in phpMyAdmin. I plan to grow this project and add more features in the future, so I will be using Sequelize for the database and will be creating a more structured backend.
 ### Setup
 1. Clone the repository.<br/>
