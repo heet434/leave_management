@@ -29,10 +29,9 @@ import BookIcon from '@mui/icons-material/Book';
 import AddTaskIcon from '@mui/icons-material/AddTask';
 import LogoutIcon from '@mui/icons-material/Logout';
 import AddCardIcon from '@mui/icons-material/AddCard';
-
+import env from 'react-dotenv';
 // add backend port from .env file
-require('dotenv').config();
-const BACKEND_PORT = process.env.REACT_APP_BACKEND_PORT;
+const BACKEND_PORT = env.REACT_APP_BACKEND_PORT;
 
 function Copyright(props: any) {
   return (

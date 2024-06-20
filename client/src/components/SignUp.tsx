@@ -15,11 +15,11 @@ import Container from '@mui/material/Container';
 import Link from '@mui/material/Link';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import axios from 'axios';
+import env from 'react-dotenv';
 import { Navigate, useNavigate } from 'react-router-dom';
 
 // get BACKEND_PORT from .env file
-require('dotenv').config();
-const BACKEND_PORT = process.env.REACT_APP_BACKEND_PORT;
+const BACKEND_PORT = env.REACT_APP_BACKEND_PORT;
 
 function Copyright(props: any) {
   return (

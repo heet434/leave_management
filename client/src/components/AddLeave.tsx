@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import env from 'react-dotenv';
 //import CalendarComponent from './Calendar';
 
 // get BACKEND_PORT from .env file
-require('dotenv').config();
-const BACKEND_PORT = process.env.REACT_APP_BACKEND_PORT;
+const BACKEND_PORT = env.REACT_APP_BACKEND_PORT;
 
 interface Leave {
     leave_date: string;

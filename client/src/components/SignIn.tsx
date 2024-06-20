@@ -23,11 +23,11 @@ import { Navigate, useNavigate } from 'react-router-dom';
 import { Link as RouterLink } from 'react-router-dom';
 import SignUp from './SignUp';
 import axios from 'axios';
+import env from 'react-dotenv';
 //const navigate = useNavigate();
 
 // get BACKEND_PORT from .env file
-require('dotenv').config();
-const BACKEND_PORT = process.env.REACT_APP_BACKEND_PORT;
+const BACKEND_PORT = env.REACT_APP_BACKEND_PORT;
 
 function Copyright(props: any) {
   return (

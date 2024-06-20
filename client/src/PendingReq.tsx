@@ -2,10 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { Paper, Typography, Button, Grid } from '@mui/material';
 import axios from 'axios';
 import dayjs from 'dayjs';
+import env from 'react-dotenv';
 
 // getting backend port from .env file
-require('dotenv').config();
-const BACKEND_PORT = process.env.REACT_APP_BACKEND_PORT;
+const BACKEND_PORT = env.REACT_APP_BACKEND_PORT
 
 interface PendingReqProps {
   instructorData: {

@@ -27,10 +27,10 @@ import AddCardIcon from '@mui/icons-material/AddCard';
 import EventNoteIcon from '@mui/icons-material/EventNote';
 import BookIcon from '@mui/icons-material/Book';
 import ViewCourses from './ViewCoursesStudent';
-
+import env from 'react-dotenv';
 // get BACKEND_PORT from .env file
-require('dotenv').config();
-const BACKEND_PORT = process.env.REACT_APP_BACKEND_PORT;
+
+const BACKEND_PORT = env.REACT_APP_BACKEND_PORT;
 
 function Copyright(props: any) {
   return (
