@@ -6,6 +6,9 @@ Project proposal: [proposal](https://heet434.github.io/dbms_project/)<br/>
 Link for A short description video of the project: [project description](https://iitgoffice-my.sharepoint.com/:v:/g/personal/p_niraj_iitg_ac_in/EShn4ozUFsxLkrNSUk-iP28BYZtHApAzStcgDXOY4a7Nhw?e=s8lYb0&nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJTdHJlYW1XZWJBcHAiLCJyZWZlcnJhbFZpZXciOiJTaGFyZURpYWxvZy1MaW5rIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXcifX0%3D)<br/>
 A short demo video of the project: [demo](https://iitgoffice-my.sharepoint.com/:v:/g/personal/p_niraj_iitg_ac_in/Ec6g084ckV1Mvqn-0CFB05QBSEKQaZ1zWRDmDCbom1rZyQ?e=nGVHSp&nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJTdHJlYW1XZWJBcHAiLCJyZWZlcnJhbFZpZXciOiJTaGFyZURpYWxvZy1MaW5rIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXcifX0%3D)<br/>
 
+I have deployed the backend using Railway, and the frontend using gh-pages in another repository [lm-deploy](https://github.com/heet434/lm-deploy). <br/>
+Here's the link to the deployed website: [Leave Managmenet](https://heet434.github.io/lm-deploy/)
+
 ## Frontend
 
 Here are some snapshots of the UI of the frontend part of the project: <br/>
