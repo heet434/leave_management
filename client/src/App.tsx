@@ -52,7 +52,7 @@ function App() {
 
   return (
     <div className="App">
-      <Router>
+      {/* <Router basename='/client'> basename='/client' is used to make sure the routes are correct when deployed to the server. */}
         <Routes>
           <Route path="/" element = {<SignIn userLoginUtility={userLoginUtility}/>}/>
           <Route path="/signup" element = {<SignUp/>}/>
@@ -60,7 +60,7 @@ function App() {
           <Route path="/instructor" element = {<Instructor userLoginUtility={userLoginUtility}/>}/>
           <Route path="/admin" element = {<Admin userLoginUtility={userLoginUtility}/>}/>
         </Routes>
-      </Router>
+      {/* </Router> */}
     </div>
   );
 }
