@@ -1,7 +1,9 @@
 const express = require('express');
-const mysql = require('mysql');
+const mysql = require('mysql2');
 const cors = require('cors');
 const path = require('path');
+
+require('dotenv').config();
 
 const app = express();
 
@@ -10,13 +12,17 @@ app.use(cors());
 app.use(express.json());
 
 const port = 5001;
-
 const db = mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: '',
-    database: 'leave_management'
-    
+    // host: 'roundhouse.proxy.rlwy.net', // 'localhost',
+    // port: 43509,
+    // user: 'root', // 'root',
+    // password: 'yUggfLEPZSxjknTPdAvrRFYeRWCoPVqQ', // 'password',
+    // database: 'railway', // 'leave_management'
+    host: process.env.MYSQLHOST,
+    port: process.env.MYSQLPORT,
+    user: process.env.MYSQLUSER,
+    password: process.env.MYSQLPASSWORD,
+    database: process.env.MYSQLDATABASE
 });
 //console.log('this runs')
 
@@ -136,7 +142,7 @@ app.post('/addLeave', (req, res) => {
     const leave_status = 'pending';
     const course_code = req.body.course_code;
 
-    db.query('INSERT INTO leave_management.leaves (leave_date, reason, user_id, user_role, status, course_code) VALUES (?, ?, ?, ?, ?, ?)',
+    db.query('INSERT INTO leaves (leave_date, reason, user_id, user_role, status, course_code) VALUES (?, ?, ?, ?, ?, ?)',
         [leave_date, reason, user_id, user_role, leave_status, course_code], (err, result) => {
             if (err) {
                 res.status(500).send({ error: err });
@@ -152,7 +158,7 @@ app.post('/addUser', (req, res) => {
     const passwd = req.body.passwd;
     const role = req.body.role;
 
-    db.query('INSERT INTO leave_management.auth (user_id, passwd, role) VALUES (?, ?, ?)',
+    db.query('INSERT INTO auth (user_id, passwd, role) VALUES (?, ?, ?)',
         [user_id, passwd, role], (err, result) => {
             if (err) {
                 res.status(500).send({ error: err });
@@ -167,7 +173,7 @@ app.post('/addUser', (req, res) => {
         const stream = req.body.stream;
         const joining_year = req.body.joining_year;
 
-        db.query('INSERT INTO leave_management.students (roll_no, name, branch, stream, joining_year) VALUES (?, ?, ?, ?, ?)',
+        db.query('INSERT INTO students (roll_no, name, branch, stream, joining_year) VALUES (?, ?, ?, ?, ?)',
             [roll_no, name, branch, stream, joining_year], (err, result) => {
                 if (err) {
                     res.status(500).send({ error: err });
@@ -181,7 +187,7 @@ app.post('/addUser', (req, res) => {
         const name = req.body.name;
         const dept = req.body.branch;
 
-        db.query('INSERT INTO leave_management.course_instructors (rg_no, name, dept) VALUES (?, ?, ?)',
+        db.query('INSERT INTO course_instructors (rg_no, name, dept) VALUES (?, ?, ?)',
             [rg_no, name, dept], (err, result) => {
                 if (err) {
                     res.status(500).send({ error: err });
@@ -214,7 +220,7 @@ app.post('/rejectLeave', (req, res) => {
     const leave_id = req.body.leave_id;
     
 
-    db.query("UPDATE leave_management.leaves SET leaves.status = 'rejected' WHERE leaves.leave_id = ?",
+    db.query("UPDATE leaves SET leaves.status = 'rejected' WHERE leaves.leave_id = ?",
         [leave_id], (err, result) => {
             if (err) {
                 res.status(500).send({ error: err });
@@ -228,7 +234,7 @@ app.post('/rejectLeave', (req, res) => {
 app.post('/approveLeave', (req, res) => {
     const leave_id = req.body.leave_id;
     //console.log(leave_id)
-    db.query("UPDATE leave_management.leaves SET leaves.status = 'accepted' WHERE leaves.leave_id = ?",
+    db.query("UPDATE leaves SET leaves.status = 'accepted' WHERE leaves.leave_id = ?",
         [leave_id], (err, result) => {
             if (err) {
                 res.status(500).send({ error: err });
