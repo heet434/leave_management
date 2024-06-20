@@ -1,7 +1,10 @@
 # Leave Management System
 
 This is a leave management system web application that allows students, instructors, and admins to manage leaves, leave applications and attendance. The system is built using Node.js and Express.js for the server side, and React with Typescript on the frontend.<br/>
-This is the website for the report of the project: [report](https://lm-report.my.canva.site/)
+This is the website for the report of the project: [report](https://lm-report.my.canva.site/)<br/>
+Project proposal: [proposal](https://heet434.github.io/dbms_project/)<br/>
+Link for A short description video of the project: [project description](https://iitgoffice-my.sharepoint.com/:v:/g/personal/p_niraj_iitg_ac_in/EShn4ozUFsxLkrNSUk-iP28BYZtHApAzStcgDXOY4a7Nhw?e=s8lYb0&nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJTdHJlYW1XZWJBcHAiLCJyZWZlcnJhbFZpZXciOiJTaGFyZURpYWxvZy1MaW5rIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXcifX0%3D)<br/>
+A short demo video of the project: [demo](https://iitgoffice-my.sharepoint.com/:v:/g/personal/p_niraj_iitg_ac_in/Ec6g084ckV1Mvqn-0CFB05QBSEKQaZ1zWRDmDCbom1rZyQ?e=nGVHSp&nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJTdHJlYW1XZWJBcHAiLCJyZWZlcnJhbFZpZXciOiJTaGFyZURpYWxvZy1MaW5rIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXcifX0%3D)<br/>
 
 ## Frontend
 
