@@ -18,5 +18,6 @@ The server side code is built using Node.js and Express.js. The server side uses
 ### Setup
 1. Clone the repository.<br/>
 2. Install the dependencies listed in requirements.txt in backend folder.<br/>
-3. Go to the backend folder ```cd server```<br/>
-4. Run ```npm start```<br/>
+3. In mysql, import the database from leave_management.sql file. This will create the structure of the database. Populate admin and auth data.<br/>
+4. Go to the backend folder ```cd server```<br/>
+5. Run ```npm start```<br/>

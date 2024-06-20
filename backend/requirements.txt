@@ -3,4 +3,4 @@ cors
 mysql
 path
 
-# Also, set up the database in XAMPP, and create a database leave_management with the required tables.
+# Also, set up the database in XAMPP, and create a database leave_management. Then import the leave_management.sql file in the database, and populate the database with the data however you want.

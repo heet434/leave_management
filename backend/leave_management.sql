@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Apr 04, 2024 at 03:54 PM
+-- Generation Time: Jun 20, 2024 at 11:02 AM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -21,28 +21,6 @@ SET time_zone = "+00:00";
 -- Database: `leave_management`
 --
 
-DELIMITER $$
---
--- Functions
---
-CREATE DEFINER=`root`@`localhost` FUNCTION `calculate_leave_percentage` (`student_id` INT) RETURNS DECIMAL(5,2)  BEGIN
-    DECLARE total_leaves INT;
-    DECLARE total_student_leaves INT;
-    DECLARE total_working_days INT;
-    DECLARE leave_percent DECIMAL(5,2);  
-    SELECT COUNT(*) INTO total_leaves FROM leaves;
-    SELECT COUNT(*) INTO total_student_leaves FROM leaves WHERE user_id = student_id AND user_role = 'student';
-    SELECT working_days INTO total_working_days FROM semesters;   
-    IF total_working_days > 0 THEN
-        SET leave_percent = (total_student_leaves / total_working_days) * 100;
-    ELSE
-        SET leave_percent = 0;
-    END IF;  
-    RETURN leave_percent;
-END$$
-
-DELIMITER ;
-
 -- --------------------------------------------------------
 
 --
@@ -59,6 +37,21 @@ CREATE TABLE `attendance` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `attendances`
+--
+
+CREATE TABLE `attendances` (
+  `attendance_id` int(11) NOT NULL,
+  `user_id` int(11) DEFAULT NULL,
+  `course_code` varchar(255) DEFAULT NULL,
+  `attendance_date` datetime DEFAULT NULL,
+  `createdAt` datetime NOT NULL,
+  `updatedAt` datetime NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `auth`
 --
 
@@ -67,15 +60,6 @@ CREATE TABLE `auth` (
   `passwd` varchar(255) NOT NULL,
   `role` enum('student','course instructor','admin') NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `auth`
---
-
-INSERT INTO `auth` (`user_id`, `passwd`, `role`) VALUES
-(0, '12345678', 'student'),
-(0, '12345678', 'course instructor'),
-(0, 'abcd1234', 'admin');
 
 --
 -- Triggers `auth`
@@ -100,6 +84,20 @@ DELIMITER ;
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `auths`
+--
+
+CREATE TABLE `auths` (
+  `user_id` int(11) NOT NULL,
+  `passwd` varchar(255) DEFAULT NULL,
+  `role` enum('student','course instructor','admin') DEFAULT NULL,
+  `createdAt` datetime NOT NULL,
+  `updatedAt` datetime NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `courses`
 --
 
@@ -113,13 +111,6 @@ CREATE TABLE `courses` (
   `total_lectures` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Dumping data for table `courses`
---
-
-INSERT INTO `courses` (`course_code`, `course_title`, `semester_type`, `semester_year`, `instructor_rg_no`, `total_students`, `total_lectures`) VALUES
-('DA214', 'DBMS', 'winter', '2024', 0, 30, 42);
-
 -- --------------------------------------------------------
 
 --
@@ -132,13 +123,6 @@ CREATE TABLE `course_instructors` (
   `dept` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Dumping data for table `course_instructors`
---
-
-INSERT INTO `course_instructors` (`rg_no`, `name`, `dept`) VALUES
-(0, 'Course Instructor 0', 'DSAI');
-
 -- --------------------------------------------------------
 
 --
@@ -147,8 +131,10 @@ INSERT INTO `course_instructors` (`rg_no`, `name`, `dept`) VALUES
 
 CREATE TABLE `holidays` (
   `holiday_id` int(11) NOT NULL,
-  `holiday_date` date DEFAULT NULL,
-  `reason` varchar(255) DEFAULT NULL
+  `holiday_date` datetime DEFAULT NULL,
+  `reason` varchar(255) DEFAULT NULL,
+  `createdAt` datetime NOT NULL,
+  `updatedAt` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -159,88 +145,15 @@ CREATE TABLE `holidays` (
 
 CREATE TABLE `leaves` (
   `leave_id` int(11) NOT NULL,
-  `leave_date` date NOT NULL,
-  `reason` text NOT NULL,
-  `user_id` int(11) NOT NULL,
-  `user_role` enum('student','course_instructor') NOT NULL,
-  `status` enum('accepted','pending','rejected') NOT NULL DEFAULT 'pending',
-  `course_code` varchar(10) DEFAULT NULL
+  `leave_date` datetime DEFAULT NULL,
+  `reason` text DEFAULT NULL,
+  `user_id` int(11) DEFAULT NULL,
+  `user_role` enum('student','course_instructor') DEFAULT NULL,
+  `status` enum('accepted','pending','rejected') DEFAULT NULL,
+  `course_code` varchar(255) DEFAULT NULL,
+  `createdAt` datetime NOT NULL,
+  `updatedAt` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `leaves`
---
-
-INSERT INTO `leaves` (`leave_id`, `leave_date`, `reason`, `user_id`, `user_role`, `status`, `course_code`) VALUES
-(2, '2024-03-31', 'bla', 0, 'student', 'accepted', 'DA214'),
-(3, '2024-03-30', 'bla', 0, 'student', 'accepted', 'DA214'),
-(4, '2024-03-27', 'nn', 0, 'student', 'accepted', 'DA214'),
-(5, '2024-03-04', 'bitty', 0, 'student', 'pending', 'DA214'),
-(6, '2024-03-05', 'nitty', 0, 'student', 'pending', 'DA214');
-
---
--- Triggers `leaves`
---
-DELIMITER $$
-CREATE TRIGGER `update_leave_percent_upon_deletion` AFTER DELETE ON `leaves` FOR EACH ROW BEGIN
-    DECLARE total_leave_days INT;
-    DECLARE total_lectures INT;
-    DECLARE leave_percent DECIMAL(5, 2);
-    
-    -- Calculate total leave days for the student in the course
-    SELECT COUNT(*) INTO total_leave_days
-    FROM leaves
-    WHERE leaves.user_id = OLD.user_id AND leaves.user_role = 'student' AND leaves.course_code = OLD.course_code;
-    
-    -- Calculate total lectures for the course
-    SELECT courses.total_lectures INTO total_lectures
-    FROM courses
-    WHERE courses.course_code = OLD.course_code;
-    
-    -- Calculate leave percentage
-    IF total_lectures > 0 THEN
-        SET leave_percent = (total_leave_days / total_lectures) * 100;
-    ELSE
-        SET leave_percent = 0;
-    END IF;
-    
-    -- Update leave_percentage column in the student_enrollment table
-    UPDATE student_enrollment
-    SET student_enrollment.leave_percentage = leave_percent
-    WHERE student_enrollment.roll_no = OLD.user_id AND student_enrollment.course_code = OLD.course_code;
-END
-$$
-DELIMITER ;
-DELIMITER $$
-CREATE TRIGGER `update_leave_percentage_after_leave_insert` AFTER INSERT ON `leaves` FOR EACH ROW BEGIN
-    DECLARE total_leave_days INT;
-    DECLARE total_lectures INT;
-    DECLARE leave_percent DECIMAL(5, 2);
-    
-    -- Calculate total leave days for the student in the course
-    SELECT COUNT(*) INTO total_leave_days
-    FROM leaves
-    WHERE leaves.user_id = NEW.user_id AND leaves.user_role = 'student' AND leaves.course_code = NEW.course_code;
-    
-    -- Calculate total lectures for the course
-    SELECT courses.total_lectures INTO total_lectures
-    FROM courses
-    WHERE courses.course_code = NEW.course_code;
-    
-    -- Calculate leave percentage
-    IF total_lectures > 0 THEN
-        SET leave_percent = (total_leave_days / total_lectures) * 100;
-    ELSE
-        SET leave_percent = 0;
-    END IF;
-    
-    -- Update leave_percentage column in the student_enrollment table
-    UPDATE student_enrollment
-    SET student_enrollment.leave_percentage = leave_percent
-    WHERE student_enrollment.roll_no = NEW.user_id AND student_enrollment.course_code = NEW.course_code;
-END
-$$
-DELIMITER ;
 
 -- --------------------------------------------------------
 
@@ -250,18 +163,13 @@ DELIMITER ;
 
 CREATE TABLE `semesters` (
   `semester_type` enum('winter','monsoon') NOT NULL,
-  `year` year(4) NOT NULL,
-  `total_working_days` int(11) NOT NULL,
-  `start_date` date NOT NULL,
-  `end_date` date NOT NULL
+  `year` int(11) NOT NULL,
+  `total_working_days` int(11) DEFAULT NULL,
+  `start_date` datetime DEFAULT NULL,
+  `end_date` datetime DEFAULT NULL,
+  `createdAt` datetime NOT NULL,
+  `updatedAt` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `semesters`
---
-
-INSERT INTO `semesters` (`semester_type`, `year`, `total_working_days`, `start_date`, `end_date`) VALUES
-('winter', '2024', 100, '2024-01-01', '2024-05-06');
 
 -- --------------------------------------------------------
 
@@ -277,13 +185,6 @@ CREATE TABLE `students` (
   `joining_year` year(4) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Dumping data for table `students`
---
-
-INSERT INTO `students` (`roll_no`, `name`, `branch`, `stream`, `joining_year`) VALUES
-(0, 'Student 0', 'DSAI', 'BTech', '2022');
-
 -- --------------------------------------------------------
 
 --
@@ -296,12 +197,20 @@ CREATE TABLE `student_enrollment` (
   `leave_percentage` decimal(5,2) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+-- --------------------------------------------------------
+
 --
--- Dumping data for table `student_enrollment`
+-- Table structure for table `student_enrollments`
 --
 
-INSERT INTO `student_enrollment` (`roll_no`, `course_code`, `leave_percentage`) VALUES
-(0, 'DA214', 11.90);
+CREATE TABLE `student_enrollments` (
+  `id` int(11) NOT NULL,
+  `roll_no` int(11) DEFAULT NULL,
+  `course_code` varchar(255) DEFAULT NULL,
+  `leave_percentage` decimal(5,2) DEFAULT NULL,
+  `createdAt` datetime NOT NULL,
+  `updatedAt` datetime NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Indexes for dumped tables
@@ -316,10 +225,24 @@ ALTER TABLE `attendance`
   ADD KEY `course_code` (`course_code`);
 
 --
+-- Indexes for table `attendances`
+--
+ALTER TABLE `attendances`
+  ADD PRIMARY KEY (`attendance_id`),
+  ADD KEY `user_id` (`user_id`),
+  ADD KEY `course_code` (`course_code`);
+
+--
 -- Indexes for table `auth`
 --
 ALTER TABLE `auth`
   ADD PRIMARY KEY (`user_id`,`role`) USING BTREE;
+
+--
+-- Indexes for table `auths`
+--
+ALTER TABLE `auths`
+  ADD PRIMARY KEY (`user_id`);
 
 --
 -- Indexes for table `courses`
@@ -345,8 +268,13 @@ ALTER TABLE `holidays`
 --
 ALTER TABLE `leaves`
   ADD PRIMARY KEY (`leave_id`),
-  ADD KEY `user_id` (`user_id`,`user_role`),
-  ADD KEY `fk_course_code` (`course_code`);
+  ADD KEY `user_id` (`user_id`);
+
+--
+-- Indexes for table `semesters`
+--
+ALTER TABLE `semesters`
+  ADD PRIMARY KEY (`semester_type`,`year`);
 
 --
 -- Indexes for table `students`
@@ -362,6 +290,14 @@ ALTER TABLE `student_enrollment`
   ADD KEY `course_code` (`course_code`);
 
 --
+-- Indexes for table `student_enrollments`
+--
+ALTER TABLE `student_enrollments`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `roll_no` (`roll_no`),
+  ADD KEY `course_code` (`course_code`);
+
+--
 -- AUTO_INCREMENT for dumped tables
 --
 
@@ -369,6 +305,12 @@ ALTER TABLE `student_enrollment`
 -- AUTO_INCREMENT for table `attendance`
 --
 ALTER TABLE `attendance`
+  MODIFY `attendance_id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `attendances`
+--
+ALTER TABLE `attendances`
   MODIFY `attendance_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
@@ -381,7 +323,13 @@ ALTER TABLE `holidays`
 -- AUTO_INCREMENT for table `leaves`
 --
 ALTER TABLE `leaves`
-  MODIFY `leave_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `leave_id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `student_enrollments`
+--
+ALTER TABLE `student_enrollments`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- Constraints for dumped tables
@@ -395,6 +343,13 @@ ALTER TABLE `attendance`
   ADD CONSTRAINT `attendance_ibfk_2` FOREIGN KEY (`course_code`) REFERENCES `courses` (`course_code`);
 
 --
+-- Constraints for table `attendances`
+--
+ALTER TABLE `attendances`
+  ADD CONSTRAINT `attendances_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `students` (`roll_no`) ON DELETE NO ACTION ON UPDATE CASCADE,
+  ADD CONSTRAINT `attendances_ibfk_2` FOREIGN KEY (`course_code`) REFERENCES `courses` (`course_code`) ON DELETE NO ACTION ON UPDATE CASCADE;
+
+--
 -- Constraints for table `courses`
 --
 ALTER TABLE `courses`
@@ -404,8 +359,7 @@ ALTER TABLE `courses`
 -- Constraints for table `leaves`
 --
 ALTER TABLE `leaves`
-  ADD CONSTRAINT `fk_course_code` FOREIGN KEY (`course_code`) REFERENCES `courses` (`course_code`),
-  ADD CONSTRAINT `leaves_ibfk_1` FOREIGN KEY (`user_id`,`user_role`) REFERENCES `auth` (`user_id`, `role`);
+  ADD CONSTRAINT `leaves_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `auths` (`user_id`) ON DELETE NO ACTION ON UPDATE CASCADE;
 
 --
 -- Constraints for table `student_enrollment`
@@ -413,6 +367,13 @@ ALTER TABLE `leaves`
 ALTER TABLE `student_enrollment`
   ADD CONSTRAINT `student_enrollment_ibfk_1` FOREIGN KEY (`roll_no`) REFERENCES `students` (`roll_no`),
   ADD CONSTRAINT `student_enrollment_ibfk_2` FOREIGN KEY (`course_code`) REFERENCES `courses` (`course_code`);
+
+--
+-- Constraints for table `student_enrollments`
+--
+ALTER TABLE `student_enrollments`
+  ADD CONSTRAINT `student_enrollments_ibfk_1` FOREIGN KEY (`roll_no`) REFERENCES `students` (`roll_no`) ON DELETE NO ACTION ON UPDATE CASCADE,
+  ADD CONSTRAINT `student_enrollments_ibfk_2` FOREIGN KEY (`course_code`) REFERENCES `courses` (`course_code`) ON DELETE NO ACTION ON UPDATE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
